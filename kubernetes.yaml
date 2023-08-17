@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sentiment-analisys-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sentiment-analisys
+  template:
+    metadata:
+      labels:
+        app: sentiment-analisys
+    spec:
+      containers:
+      - name: sentiment-analisys
+        image: felipebaz/sentiment-analisys
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: sentiment-analisys-service
+spec:
+  selector:
+    app: sentiment-analisys
+  ports:
+  - port: 5000
+    targetPort: 5000
+  type: LoadBalancer
